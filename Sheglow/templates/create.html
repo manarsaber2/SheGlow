@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+{% block title %}Products - SHEGLOW{% endblock %}
+{% block head %}
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-image: url("static/images/logincreate.avif");
+            
+            background-size: cover;
+            
+            background-position: center;
+          
+            margin: 0;
+            padding: 0;
+           
+        }
+
+
+        .signup-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            
+        }
+
+       
+        .signup-box {
+            background-color: white;
+            padding: 8px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+       
+        .signup-box h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #D91656;
+        }
+
+       
+        .signup-box input {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+      
+        .signup-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #D91656;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .signup-box button:hover {
+            background-color: #C8154C;
+           
+        }
+
+      
+        .signup-box p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .signup-box p a {
+            color: #D91656;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .signup-box p a:hover {
+            text-decoration: underline;
+        }
+
+       
+        .input-group {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .input-group input {
+            width: 48%;
+          
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    
+    <div class="signup-container">
+        <div class="signup-box">
+            <h1>Register</h1>
+            <form method="POST">
+                {{ form.hidden_tag() }}
+
+                <label for="first_name">First Name</label>
+                {{ form.first_name(class="form-control") }}
+                {% if form.first_name.errors %}
+                <div class="field-error">{{ form.first_name.errors[0] }}</div>
+                {% endif %}
+
+                <label for="second_name">Second Name</label>
+                {{ form.second_name(class="form-control") }}
+                {% if form.second_name.errors %}
+                <div class="field-error">{{ form.second_name.errors[0] }}</div>
+                {% endif %}
+
+                <label for="email">Email</label>
+                {{ form.email(class="form-control") }}
+                {% if form.email.errors %}
+                <div class="field-error">{{ form.email.errors[0] }}</div>
+                {% endif %}
+
+                <label for="password">Password</label>
+                {{ form.password(class="form-control") }}
+                {% if form.password.errors %}
+                <div class="field-error">{{ form.password.errors[0] }}</div>
+                {% endif %}
+
+                <label for="confirm_password">Confirm Password</label>
+                {{ form.confirm_password(class="form-control") }}
+                {% if form.confirm_password.errors %}
+                <div class="field-error">{{ form.confirm_password.errors[0] }}</div>
+                {% endif %}
+
+                <label for="address">Address</label>
+                {{ form.address(class="form-control") }}
+                {% if form.address.errors %}
+                <div class="field-error">{{ form.address.errors[0] }}</div>
+                {% endif %}
+
+                <label for="phone_number">Phone Number</label>
+                {{ form.phone_number(class="form-control") }}
+                {% if form.phone_number.errors %}
+                <div class="field-error">{{ form.phone_number.errors[0] }}</div>
+                {% endif %}
+
+                <button type="submit">{{ form.submit.label }}</button>
+            </form>
+        </div>
+    </div>
+    {% endblock %}
+  

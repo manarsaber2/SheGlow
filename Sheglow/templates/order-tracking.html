@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}"/>
+    <title>Order Tracking - SheGlow</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url('static/images/b6.webp');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+        }
+
+        h1 {
+            font-size: 36px;
+            font-family: cursive;
+            font-weight: bold;
+            color: #D91656;
+            margin-bottom: 30px;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+        }
+
+        h1 img {
+            width: 45px;
+            margin-left: 50px; 
+        }
+
+        .order-tracking {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .order-tracking input[type="text"] {
+            padding: 14px;
+            font-size: 18px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            flex-grow: 1;
+        }
+
+        .order-tracking input[type="text"]:focus {
+            border-color: #D91656;
+        }
+
+        .order-tracking button {
+            padding: 14px 22px;
+            font-size: 18px;
+            font-family: cursive;
+            background-color: #D91656;
+            color: white;
+            border: none;
+            cursor:pointer;
+            border-radius: 8px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .order-tracking button:hover {
+            background-color: #a91446;
+            transform: scale(1.05);
+        }
+
+        .order-info {
+            margin-top: 25px;
+            display: none;
+            font-size: 18px;
+        }
+
+        .order-info h2 {
+            font-size: 26px;
+            margin-bottom: 15px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .order-info p {
+            margin: 12px 0;
+        }
+
+        .order-info span {
+            font-weight: 500;
+            color: #555;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+                max-width: 90%;
+            }
+
+            h1 {
+                font-size: 28px;
+            }
+
+            .order-tracking input[type="text"], .order-tracking button {
+                font-size: 16px;
+            }
+        }
+
+        .number-line {
+            position: relative;
+            margin-top: 30px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .line {
+            position: absolute;
+            width: 100%;
+            height: 4px;
+            background-color: #ddd;
+            transform: translateY(-50%);
+        }
+
+        #arabic-logo {
+            position: absolute;
+            height: 40px;
+            width: auto;
+            top: 0;
+            left: 0;
+            transition: left 2s ease;
+        }
+
+        #arabic-logo.pending {
+            animation: moveForward 5s linear infinite;
+        }
+
+        @keyframes moveForward {
+            0% {
+                left: 0;
+            }
+            100% {
+                left: 50%;
+            }
+        }
+
+        #arabic-logo.end {
+            left: 100%;
+            transform: translateX(-100%);
+        }
+
+       
+        .line-color {
+            transition: background-color 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Order Tracking <img src="static/images/10.png" alt="Logo"></h1> 
+        <div class="order-tracking">
+            <input type="text" id="order-id" placeholder="Enter Order ID" oninput="validateInput(event)" />
+            <button onclick="fetchOrderDetails()">Track Order</button>
+        </div>
+
+        <div id="order-info" class="order-info">
+            <h2>Order Details</h2>
+            <p><strong>Order Status:</strong> <span id="order-status">Pending</span></p>
+            <p><strong>Order Date:</strong> <span id="order-date">N/A</span></p>
+            <p><strong>Days Since Order:</strong> <span id="days-since-order">0</span> days</p>
+        </div>
+        
+        <div class="number-line">
+            <div class="line" id="status-line"></div>
+            <img id="arabic-logo" src="static/images/14.png" alt="Arabic Logo" />
+        </div>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <script>
+                Swal.fire({
+                    icon: "{{ 'success' if category == 'success' else 'error' }}",
+                    title: "{{ message }}",
+                    showConfirmButton: true,
+                    timer: 5000
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+    <script>
+    
+function validateInput(event) {
+    const input = event.target;
+    const value = input.value;
+    if (!/^\d*$/.test(value)) {
+        input.value = value.replace(/[^0-9]/g, '');
+    }
+}
+
+
+function saveTrackingPreferences(preferenceKey, preferenceValue) {
+    const clientId = '{{ session["client_id"] }}';  
+    let preferences = JSON.parse(localStorage.getItem(clientId)) || {};
+    preferences[preferenceKey] = preferenceValue;
+    localStorage.setItem(clientId, JSON.stringify(preferences));
+}
+
+
+function getTrackingPreferences(preferenceKey) {
+    const clientId = '{{ session["client_id"] }}';  
+    let preferences = JSON.parse(localStorage.getItem(clientId)) || {};
+    return preferences[preferenceKey] || null;
+}
+
+
+function fetchOrderDetails() {
+    const orderIdInput = document.getElementById('order-id');
+    const orderId = orderIdInput.value.trim();
+    const orderInfoDiv = document.getElementById('order-info');
+    const orderStatusSpan = document.getElementById('order-status');
+    const orderDateSpan = document.getElementById('order-date');
+    const daysSinceOrderSpan = document.getElementById('days-since-order');
+    const statusLine = document.getElementById('status-line');
+    const logo = document.getElementById('arabic-logo');
+
+    orderInfoDiv.style.display = 'none';
+
+    if (!orderId || isNaN(orderId) || Number(orderId) <= 0) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid Input',
+            text: 'Please enter a valid Order ID.',
+        });
+        return;
+    }
+
+    saveTrackingPreferences('order_id', orderId); // Save the Order ID as preference
+
+    fetch(`/order-tracking/${orderId}`)
+        .then(response => {
+           
+            if (!response.ok) {
+                return response.json().then(errData => {
+                    if (errData.flash) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: errData.flash,
+                        });
+                    }
+                    throw new Error(errData.error || 'Something went wrong');
+                });
+            }
+            return response.json();  // Parse the successful JSON response
+        })
+        .then(data => {
+            orderInfoDiv.style.display = 'block';
+            orderStatusSpan.textContent = data.order_status || 'Unknown';
+            orderDateSpan.textContent = data.order_date || 'N/A';
+            daysSinceOrderSpan.textContent = data.days_since_order || 'N/A';
+
+            // Adjust logo and line color based on order status
+            if (data.order_status === "Pending") {
+                logo.classList.remove('end');
+                logo.classList.add('pending');
+                statusLine.classList.add('line-color');
+                statusLine.style.backgroundColor = "#D91656"; 
+            } else if (data.order_status === "Completed") {
+                logo.classList.remove('pending');
+                logo.classList.add('end');
+                statusLine.classList.add('line-color');
+                statusLine.style.backgroundColor = "#4CAF50";
+            } else {
+                statusLine.classList.remove('line-color');
+                statusLine.style.backgroundColor = "#ddd"; 
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'An unexpected error occurred.',
+            });
+        });
+}
+
+
+
+window.onload = () => {
+    const lastOrderID = getTrackingPreferences('order_id');
+    if (lastOrderID && /^\d+$/.test(lastOrderID)) {
+        document.getElementById('order-id').value = lastOrderID;
+    }
+};
+
+    </script>
+</body>
+</html>

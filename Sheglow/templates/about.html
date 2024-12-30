@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Search Results{% endblock %}
+{% block head %}
+    <style>
+        /* About Us Section Styling */
+        #about {
+            background-color: #AF5662;
+            /* White background color */
+        }
+
+        /* About us container */
+        .about-us-section {
+            position: relative;
+            min-height: 100vh;
+            /* Full screen height */
+            font-family: "Nunito", sans-serif;
+            padding-top: 5px;
+            ;
+            padding-bottom: 5px;
+            padding-left: 20px;
+            /* Ensures no gap on the left side */
+            padding-right: 5px;
+            /* No gap on the right side */
+            margin: 0;
+            /* Remove any margin causing space */
+            width: 100%;
+            /* Ensure full width of the container */
+            box-sizing: border-box;
+            /* Make sure padding and borders are included in width calculations */
+        }
+
+        /* Flexbox for content arrangement */
+        .about-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1500px;
+            /* Limit max width */
+            width: 100%;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        /* Left side text */
+        .text-left {
+            max-width: 50%;
+            /* Ensure text takes up half the space */
+            color: #FB8DA0;
+            text-align: left;
+            padding-right: 10px;
+            /* Space between text and image */
+            padding-left: 90px;
+        }
+
+        .text-left h1 {
+            font-size: 3.5rem;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: lightpink;
+        }
+
+        .text-left h1 span {
+            color: #B71540;
+        }
+
+        .text-left p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: blanchedalmond;
+        }
+
+        /* Right side image */
+        .image-right {
+            max-width: 45%;
+            /* Image takes up 45% of the space */
+            box-sizing: border-box;
+            border-radius: 20px;
+            margin: 0;
+            /* Ensure there's no unwanted margin */
+            padding: 0;
+            /* Remove any padding causing gap */
+            display: flex;
+            /* Flex to handle any alignment issues */
+            justify-content: flex-end;
+            /* Align the image to the right */
+            flex-shrink: 0;
+            overflow: hidden;
+            /* Ensures no overflow beyond the container */
+            background-size: cover;
+            /* Ensures the image covers the area */
+            background-repeat: no-repeat;
+            /* Prevent image repetition */
+            height: 100%;
+            /* Ensures the image takes up full height */
+            margin-left: 30px;
+            /* Adds space between image and content */
+            margin-right: 0;
+            margin-top: 0;
+        }
+
+       
+        /* Responsive design for smaller screens */
+@media (max-width: 768px) {
+    .about-content {
+        flex-direction: column;
+        /* Stack text and image for smaller screens */
+    }
+
+    .text-left {
+        max-width: 100%;
+        padding-left: 20px; /* Adjust padding for better spacing */
+        text-align: center; /* Center align text for smaller screens */
+    }
+
+    .image-right {
+        max-width: 100%;
+        padding-left: 0;
+        height: 300px;
+        margin-left: 0;
+        /* Adjust height for smaller screens */
+        background-size: contain; /* Ensure image fits without overflow */
+        background-position: center; /* Center the image */
+    }
+
+    .text-left h1 {
+        font-size: 2rem; /* Adjust heading font size */
+        padding-top: 20px;
+    }
+
+    .text-left p {
+        font-size: 1rem; /* Adjust paragraph font size */
+    }
+}
+
+/* Additional responsiveness for medium devices (larger than 768px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .text-left {
+        padding-left: 50px;
+    }
+
+    .image-right {
+        max-width: 40%; /* Slightly reduce image size */
+        height: 80%; /* Adjust image height */
+    }
+}
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block content %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<script>
+Swal.fire({
+        icon: '{{ category }}' == 'success' ? 'success' : '{{ category }}' == 'error' ? 'error' : 'info',
+        title: '{{ message }}',
+        timer: 3000,
+        showConfirmButton: false
+    });
+
+</script>
+{% endfor %}
+{% endif %}
+{% endwith %}
+    <!-- About Us Section -->
+    <div class="about-us-section" id="about">
+        <div class="about-content">
+            <div class="text-left">
+                <h1>Welcome To<br/>SHE<span>GLOW </span><i class="fas fa-heart care-icon"></i></h1>
+                <p>At SHE<span>GLOW</span>, we believe every person deserves to feel beautiful and confident in
+                    their skin. Our curated collection of premium makeup and skincare products is designed to help
+                    you radiate your inner glow. Whether you're looking for the perfect foundation, an eye-catching
+                    lipstick, or skincare that pampers your skin, SHEGLOW has everything you need to enhance your
+                    natural beauty.</p>
+                <p>Our commitment to quality, affordability, and inclusivity ensures that every product we offer is
+                    crafted with love, care, and your best interests in mind. Join us on a journey of
+                    self-expression and self-love!</p>
+            </div>
+            <div class="image-right">
+                <!-- Use Flask's url_for for static images -->
+                <img src="{{ url_for('static', filename='images/she.jpg') }}" alt="SHEGLOW Image">
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+   

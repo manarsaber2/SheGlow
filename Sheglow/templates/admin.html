@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - SHEGLOW</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> 
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}"/>
+   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Darker+Grotesque:wght@300..900&family=Great+Vibes&family=Orbitron:wght@400..900&family=Pacifico&family=Playwrite+AR:wght@100..400&family=Yellowtail&family=Zen+Dots&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bruno+Ace+SC&family=Darker+Grotesque:wght@300..900&family=Great+Vibes&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Orbitron:wght@400..900&family=Pacifico&family=Playwrite+AR:wght@100..400&family=Yellowtail&family=Zen+Dots&display=swap" rel="stylesheet">
+    <style>
+       
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 230px); 
+        }
+
+        .login-box {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-box h2 {
+            color: #D91656;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background-color: #D91656;
+            border: none;
+            border-radius: 5px;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn:hover {
+            background-color: #C8154C;
+        }
+     
+         footer {
+            background-color: #D91656;
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+            font-weight: bold;
+            font-family: "Orbitron", sans-serif;
+        }
+
+        footer a:hover {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+   
+    <div class="top-bar">
+        <div class="promo">
+            Enjoy 15% Off Your First Order Using Code <strong>FIRST15</strong> -
+            <a href="{{ url_for('home') }}#product">
+                <span class="shop-now">Shop Now</span>
+            </a>
+        </div>
+    </div>
+
+  
+    <div class="middle-bar">
+        <div class="middle-left">
+            <div class="logo">SHE<span>GLOW</span></div>
+        </div>
+        <div class="middle-center">
+            <div class="search-container">
+                <input type="text" placeholder="Search for products..." class="search-field">
+                <button class="search-btn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="middle-right">
+            <a href="{{ url_for('cart') }}" class="cart-button">
+                <i class="fa fa-shopping-cart"></i>
+                <span class="cart-count">3</span> 
+            </a>
+            <a href="#"><i class="fas fa-store"></i> Stores</a>
+            <a href="#"><i class="fas fa-heart"></i> Wishlist</a>
+            <div class="dropdown">
+                <button class="dropbtn">My Account</button>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('login') }}">Login</a>
+                    <a href="{{ url_for('create') }}">Create Account</a>
+                    <div class="mode-switcher">
+                        <a href="{{ url_for('admin') }}" class="mode-btn">Admin Mode</a>
+                        <a href="{{ url_for('home') }}" class="mode-btn" style="display:none;">Customer Mode</a>
+                    </div>
+                </div>
+            </div>
+            <div class="currency-dropdown">
+                <button class="currency-btn">
+                    <img src="{{ url_for('static', filename='images/egypt-flag.avif') }}" alt="Egypt Flag"
+                        class="flag-icon">
+                    <span id="currency-text">EGP</span>
+                    <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="currency-dropdown-content">
+                    <a href="#" class="currency-option">
+                        <img src="{{ url_for('static', filename='images/egypt-flag.avif') }}" alt="Egypt Flag"
+                            class="flag-icon"> EGP
+                    </a>
+                    <a href="#" class="currency-option">
+                        <img src="{{ url_for('static', filename='images/usd.flag.png') }}" alt="USA Flag"
+                            class="flag-icon"> USD
+                    </a>
+                    <a href="#" class="currency-option">
+                        <img src="{{ url_for('static', filename='images/EUR.flag.png') }}" alt="EUR Flag"
+                            class="flag-icon"> EUR
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header>
+        <nav class="bottom-nav">
+            <ul class="navbar">
+                <li><a href="/">Home</a></li>
+                <li><a href="#product">Products</a></li>
+                <li><a href="#">Reviews</a></li>
+                <li><a href="#">Offers</a></li>
+                <li><a href="#">Brands</a></li>
+                <li><a href="/about">About Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+
+<div class="login-container">
+    <div class="login-box">
+        <h2>Admin Login</h2>
+        <form action="/admin" method="POST">
+            <div class="input-group">
+                <label for="user_name">Username</label>
+                <input type="text" id="user_name" name="user_name" placeholder="Enter username" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+        </form>
+    </div>
+</div>
+
+    <footer>
+        © 2024 SHEGLOW Admin Panel | <a href="privacy.html">Privacy Policy</a>
+    </footer>
+</body>
+</html>

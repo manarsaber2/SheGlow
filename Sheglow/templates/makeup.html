@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block title %}Skincare Products - SHEGLOW{% endblock %}
+{% block head %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+
+h1 {
+    text-align: center;
+    font-size: 36px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #333333, #D91656); 
+    background-clip: text; 
+    -webkit-background-clip: text; 
+    color: transparent;
+    margin-bottom: 40px;
+}
+body
+{
+    background-image:url("{{ url_for('static', filename='images/b6.webp') }}");
+}
+
+
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.product-card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+
+.product-image {
+    width: 90%;
+    height: 350px; 
+    object-fit: cover; 
+    background-color: #f9f9f9; 
+    padding: 20px;
+    border-radius: 8px;
+}
+
+
+.product-name {
+    font-size: 18px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #333333, #D91656); 
+    background-clip: text; 
+    -webkit-background-clip: text; 
+    color: transparent;
+    margin: 15px 0 10px 0;
+}
+
+
+.product-price {
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(45deg, #333333, #D91656);
+    background-clip: text; 
+    -webkit-background-clip: text; 
+    color: transparent;
+    margin-bottom: 15px;
+}
+
+
+.buy-now-container {
+    position: relative;
+    display: inline-block;
+}
+
+
+.buy-now {
+    display: inline-block;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #fff; 
+    background: linear-gradient(45deg, #333333, #D91656);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    z-index: 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.buy-now:hover {
+    background-color: #D91654;
+    transform: scale(1.05);
+}
+
+
+.buy-now::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: left 0.3s ease-in-out;
+    z-index: 0;
+}
+
+.buy-now:hover::after {
+    left: 0;
+}
+
+
+.buy-now span {
+    position: relative;
+    z-index: 2;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+.buy-now:hover span {
+    transform: translateY(-5px);
+}
+
+
+.wishlist-btn {
+    background: transparent;
+    border: none;
+    font-size: 50px;
+    color: #666;
+    cursor: pointer;
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    transition: transform 0.3s ease, color 0.3s ease;
+    pointer-events: auto;
+    z-index: 10;
+}
+
+.wishlist-btn.liked {
+    color: #ff5a5a; 
+}
+
+.wishlist-btn:hover {
+    transform: scale(1.2);
+}
+
+
+.product-card {
+    position: relative;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.buy-now-container {
+    margin-bottom: 20px; 
+}
+
+a {
+    text-decoration: none;
+}
+select#sort {
+    padding: 8px 12px;
+    font-size: 16px;
+    border: 2px solid #D91656;
+    border-radius: 8px;
+    background-color: #fff;
+    color: #333;
+}
+select#sort:focus {
+    outline: none;
+    border-color: #333;
+}
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Our Products</h1>
+
+   
+    <div style="margin-bottom: 20px;">
+    <label for="sort">Sort By: </label>
+    <select id="sort" onchange="sortProducts()">
+    <option value="price_asc" {% if sort_by == 'Price' and order == 'asc' %}selected{% endif %}>Price: Low to High</option>
+    <option value="price_desc" {% if sort_by == 'Price' and order == 'desc' %}selected{% endif %}>Price: High to Low</option>
+    <option value="rating_asc" {% if sort_by == 'Rating' and order == 'asc' %}selected{% endif %}>Rating: Low to High</option>
+    <option value="rating_desc" {% if sort_by == 'Rating' and order == 'desc' %}selected{% endif %}>Rating: High to Low</option>
+    <option value="name_asc" {% if sort_by == 'ProductName' and order == 'asc' %}selected{% endif %}>Name: A to Z</option>
+     <option value="name_desc" {% if sort_by == 'ProductName' and order == 'desc' %}selected{% endif %}>Name: Z to A</option>
+    </select>
+     </div>
+
+
+     <div class="product-grid" id="product-grid">
+        {% for product in products %}
+        <div class="product-card">
+            <a href="{{ url_for('product_details', product_id=product.ProductID) }}" class="product-card-link">
+                <div class="product-card-inner">
+                    <img src="{{ url_for('static', filename=product.PhotoPath) }}" class="product-image" alt="{{ product.ProductName }}">
+                </div>
+            </a>
+           
+            <button class="wishlist-btn" data-product-id="{{ product.ProductID }}" onclick="toggleWishlist(this)">
+                {% if product.ProductID in wishlist %}
+                &#10084; 
+                {% else %}
+                &#9825; 
+                {% endif %}
+            </button>
+            <h5 class="product-name">{{ product.ProductName }}</h5>
+            <p class="product-price">Price: ${{ product.Price }}</p>
+            <div class="buy-now-container">
+                <form action="{{ url_for('add_to_cart', product_id=product.ProductID) }}" method="POST" style="display: inline;">
+                    <input type="hidden" name="product_id" value="{{ product.ProductID }}">
+                    <button type="submit" class="buy-now">
+                        <span>Add To Cart</span>
+                    </button>
+                </form>    
+            </div>
+        </div>
+        {% endfor %}
+    </div>    
+</div>
+ 
+ {% with messages = get_flashed_messages(with_categories=true) %}
+ {% if messages %}
+     {% for category, message in messages %}
+         <script>
+             Swal.fire({
+                 icon: "{{ 'success' if category == 'success' else 'error' }}",
+                 title: "{{ message }}",
+                 showConfirmButton: true,
+                 timer: 5000
+             });
+         </script>
+     {% endfor %}
+ {% endif %}
+ {% endwith %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleWishlist(button) {
+    const productId = button.getAttribute('data-product-id');
+    const url = `/wishlist/toggle/${productId}`;
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            if (data.action === 'added') {
+                button.classList.add('liked');
+                button.innerHTML = '&#10084;'; // Filled heart
+                button.style.color = '#ff5a5a';
+            } else if (data.action === 'removed') {
+                button.classList.remove('liked');
+                button.innerHTML = '&#9825;'; // Empty heart
+                button.style.color = '#666';
+            }
+        }
+        alert(data.message);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+    function sortProducts() {
+    const sortOption = document.getElementById('sort').value;
+    let sortBy = '', order = '';
+
+   
+    switch (sortOption) {
+        case 'price_asc':
+            sortBy = 'Price';
+            order = 'asc';
+            break;
+        case 'price_desc':
+            sortBy = 'Price';
+            order = 'desc';
+            break;
+        case 'rating_asc':
+            sortBy = 'Rating';
+            order = 'asc';
+            break;
+        case 'rating_desc':
+            sortBy = 'Rating';
+            order = 'desc';
+            break;
+        case 'name_asc':
+            sortBy = 'ProductName';
+            order = 'asc';
+            break;
+        case 'name_desc':
+            sortBy = 'ProductName';
+            order = 'desc';
+            break;
+        default:
+            sortBy = 'ProductName';
+            order = 'asc';
+    }
+
+    
+    const category = '{{ category }}';
+    const url = `/product/${category}?sort_by=${sortBy}&order=${order}`;
+    
+ 
+    window.location.href = url;
+}
+</script>
+{% endblock %}

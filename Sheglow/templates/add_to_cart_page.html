@@ -1,0 +1,364 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart{% endblock %}
+{% block head %}
+<style>
+    body {
+
+        font-family: 'Helvetica Neue', Arial, sans-serif;
+        direction: ltr;
+        background: url("{{ url_for('static', filename='images/b6.webp') }}") no-repeat center center fixed;
+        background-size: cover;
+        background-attachment: fixed;
+        margin: auto;
+        padding: auto;
+        color: #333;
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+
+    h1 {
+        text-align: center;
+        color: #8e44ad;
+        font-size: 42px;
+        margin-bottom: 20px;
+        letter-spacing: 1px;
+        font-weight: 700;
+    }
+
+    .cart-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        margin: 60px;
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 40px;
+        box-shadow: 0 12px 18px rgba(0, 0, 0, 0.15);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .cart-item:hover {
+        transform: scale(1.03);
+        box-shadow: 0 18px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .cart-item img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        margin-right: 20px;
+        border-radius: 10px;
+    }
+
+    .cart-item-details {
+        flex-grow: 1;
+        text-align: left;
+    }
+
+    .cart-item-details h3 {
+        font-size: 20px;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+    }
+
+    .cart-item-details .price {
+        font-size: 18px;
+        font-weight: 600;
+        color: rgb(175, 51, 131);
+        margin-top: 5px;
+    }
+
+    .cart-item-details .quantity {
+        font-size: 16px;
+        margin-top: 5px;
+        color: #555;
+    }
+
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .cart-item button {
+        padding: 10px 20px;
+        margin: 5px;
+        border: none;
+        border-radius: 30px;
+        background: linear-gradient(45deg, #333333, #D91656);
+        color: white;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    .cart-item button:hover {
+        background-color: #732d91;
+        transform: translateY(-2px);
+    }
+
+    .empty-cart {
+        background: linear-gradient(45deg, #333333, #D91656);
+        background-clip: text;
+        color: transparent;
+        -webkit-background-clip: text;
+        text-align: center;
+        font-size: 36px;
+        font-weight: 700;
+        margin-top: 50px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        padding: 30px;
+        border-radius: 50%;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+    }
+
+    .cart-actions form {
+        margin-top: 20px;
+        display: inline-block;
+    }
+
+    h1.total {
+        font-size: 36px;
+        color: #fff;
+        text-align: center;
+        margin: 5%;
+        font-weight: 700;
+        padding: 20px 30px;
+        background: linear-gradient(45deg, #333333, #D91656);
+        border-radius: 100px;
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    h1.total:hover {
+        transform: scale(1.05);
+        box-shadow: 0 16px 36px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes walkInRight {
+        0% {
+            transform: translateX(2cm);
+           
+        }
+
+        100% {
+            transform: translateX(0);
+            
+        }
+    }
+
+    .btn-primary,
+    .btn-danger,
+    .btn-secondary {
+        background: linear-gradient(45deg, #333333, #D91656);
+        color: white;
+        padding: 14px 30px;
+        border-radius: 30px;
+        margin: 20px;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 18px;
+        animation: walkInRight 0.5s ease-out;
+    }
+
+    .btn-primary:hover,
+    .btn-danger:hover,
+    .btn-secondary:hover {
+        background-color: #732d91;
+        transform: translateY(-2px);
+    }
+
+
+
+    /* Media Queries */
+    @media (max-width: 768px) {
+        body {
+            padding: auto;
+        }
+
+        h1 {
+            font-size: 30px;
+        }
+
+        .cart-item {
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 15px;
+        }
+
+        .cart-item img {
+            width: 100px;
+            height: 100px;
+            margin-right: 0;
+            margin-bottom: 15px;
+        }
+
+        .cart-item-details {
+            text-align: left;
+        }
+
+        .cart-item button {
+            width: 100%;
+            padding: 12px;
+        }
+
+        .cart-actions form {
+            width: 100%;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        h1.total {
+            font-size: 30px;
+        }
+
+        .empty-cart {
+            font-size: 28px;
+            padding: 20px;
+        }
+
+        .btn-primary,
+        .btn-danger,
+        .btn-secondary {
+            width: 90%;
+            padding: 12px 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 24px;
+        }
+
+        .cart-item img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .cart-item-details h3 {
+            font-size: 18px;
+        }
+
+        .cart-item-details .price {
+            font-size: 16px;
+        }
+
+        .cart-item-details .quantity {
+            font-size: 14px;
+        }
+
+        h1.total {
+            font-size: 24px;
+        }
+    }
+    
+</style>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block content %}
+
+
+{% if cart_items %}
+<ul>
+    {% for item in cart_items %}
+    <li class="cart-item">
+        <img src="{{ url_for('static', filename=item.PhotoPath) }}" alt="{{ item.ProductName }}">
+        <div class="cart-item-details">
+            <h3>{{ item.ProductName }}</h3>
+            <p class="price"><strong>Price:</strong> ${{ item.Price }}</p>
+            <p class="quantity"><strong>Quantity:</strong> {{ item.quantity }}</p>
+        </div>
+
+        
+        <div class="button-group">
+            <form action="{{ url_for('add_to_cart', product_id=item.ProductID) }}" method="POST">
+                <button type="submit">+</button>
+            </form>
+
+            <form action="{{ url_for('decrease_quantity', product_id=item.ProductID) }}" method="POST">
+                <button type="submit">-</button>
+            </form>
+        </div>
+
+    
+        <form action="{{ url_for('remove_from_cart', product_id=item.ProductID) }}" method="POST"
+            style="margin-top: 10px;">
+            <button type="submit">Remove</button>
+        </form>
+    </li>
+    {% endfor %}
+    <h1 class="total">Subtotal: ${{ total }}</h1>
+</ul>
+{% else %}
+<p class="empty-cart">Your cart is empty.</p>
+{% endif %}
+
+<div class="cart-actions">
+    <form action="{{ url_for('checkout') }}" method="get">
+        <button type="submit" class="btn-primary">Proceed to Checkout</button>
+    </form>
+    <form action="{{ url_for('clear_cart') }}" method="POST">
+        <button type="submit" class="btn-danger">Clear All Products from Cart</button>
+    </form>
+</div>
+
+<div>
+    <a href="/product" class="btn-secondary">Continue Shopping</a>
+</div>
+
+ 
+ {% with messages = get_flashed_messages(with_categories=true) %}
+ {% if messages %}
+     {% for category, message in messages %}
+         <script>
+             Swal.fire({
+                 icon: "{{ 'success' if category == 'success' else 'error' }}",
+                 title: "{{ message }}",
+                 showConfirmButton: true,
+                 timer: 5000
+             });
+         </script>
+     {% endfor %}
+ {% endif %}
+ {% endwith %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    
+    const proceedToCheckoutButton = document.querySelector(".btn-primary");
+    if (proceedToCheckoutButton) {
+        proceedToCheckoutButton.addEventListener("click", function (event) {
+            if (!document.querySelector(".cart-item")) {
+                alert("Your cart is empty. You cannot proceed to checkout.");
+                event.preventDefault();
+            }
+        });
+    }
+
+   
+    const clearCartButton = document.querySelector(".btn-danger");
+    if (clearCartButton) {
+        clearCartButton.addEventListener("click", function (event) {
+            const cartItems = document.querySelectorAll(".cart-item");
+            if (cartItems.length === 0) {
+                alert("Your cart is already empty.");
+                event.preventDefault();
+            }
+        });
+    }
+});
+
+
+</script>
+{% endblock %}

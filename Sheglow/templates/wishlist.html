@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+
+{% block title %}My Wishlist - SHEGLOW{% endblock %}
+{% block head %}
+<style>
+    
+    body {
+        font-family: 'Nunito', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-image: url('static/images/background.jpeg');
+        background-size: cover; 
+        background-position: center;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 55px;
+        font-weight: 700;
+        color: #B71540;
+        margin-bottom: 40px;
+        text-align: center;
+    }
+
+    .product-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+        gap: 30px;
+        justify-content: center;
+        width: 100%; 
+        max-width: 1200px;
+        text-decoration: none;
+    }
+
+    .product-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between; 
+        align-items: center;
+        text-align: center;
+        transition: transform 0.3s ease;
+        height: 350px; 
+        max-width: 300px; 
+        position: relative; 
+    }
+
+    .product-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-image {
+        width: 80%; 
+        height: 60%; 
+        object-fit: contain; 
+        border-radius: 8px; 
+        margin-bottom: 10px;
+    }
+
+    .product-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: #6e3b3b;
+        margin-bottom: 5px;
+    }
+
+    .product-price {
+        font-size: 14px;
+        font-weight: bold;
+        color: #9f5f5f;
+        margin-bottom: 10px;
+    }
+
+    
+    .product-card a {
+        text-decoration: none;
+    }
+
+    .remove-btn {
+        background-color: #D91656;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        width: auto; 
+        margin-top: 10px;
+        position: absolute;
+        bottom: 10px; 
+    }
+
+    .remove-btn:hover {
+        background-color: #C8154C;
+    }
+
+    .wishlist-empty {
+        text-align: center;
+        font-size: 24px;
+        color: #6e3b3b;
+        margin-top: 50px;
+    }
+
+    .product-card {
+        text-decoration: none;
+    }
+
+    @media (max-width: 768px) {
+        h1 {
+            font-size: 36px;
+        }
+
+        .product-card {
+            max-width: 90%; 
+            height: auto; 
+        }
+
+        .product-grid {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+        }
+    }
+
+   
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .product-card {
+            max-width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .product-image {
+            width: 100%; 
+            height: 50%; 
+        }
+
+        .remove-btn {
+            width: auto;
+            padding: 8px 12px;
+        }
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>My Wishlist</h1>
+
+    {% if wishlist_items %}
+    <div class="product-grid">
+        {% for wishlist_item in wishlist_items %}
+    
+            <div class="product-card">
+                <a href="{{ url_for('product_details', product_id=wishlist_item.product.ProductID) }}">
+                    <img src="{{ url_for('static', filename=wishlist_item.product.PhotoPath) }}" class="product-image" alt="{{ wishlist_item.product.ProductName }}">
+                    <h5 class="product-name">{{ wishlist_item.product.ProductName }}</h5>
+                    <p class="product-price">${{ wishlist_item.product.Price }}</p>
+                </a>
+                
+                <button class="remove-btn" data-product-id="{{ wishlist_item.product.ProductID }}" onclick="removeFromWishlist(this)">Remove</button>
+            </div>
+    
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="wishlist-empty">Your wishlist is currently empty. Start adding products to your wishlist!</p>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+   
+    function removeFromWishlist(button) {
+        const productId = button.getAttribute('data-product-id');
+
+        fetch(`/wishlist/toggle/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    alert(data.message);
+                    button.closest('.product-card').remove();
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while removing the item.');
+            });
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SHEGLOW{% endblock %}
+
+{% block head %}
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #efcaca;
+    }
+    header {
+        color: rgb(19, 19, 19);
+        padding: 1em 0;
+        text-align: center;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+      .logout-btn {
+        display: inline-block;
+        margin-top: 20px;
+        background-color: #D91656;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+ .center-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 15vh; 
+        background-color: #efcaca; 
+    }
+
+
+    .logout-btn:hover {
+        background-color: #c0134d;
+    }
+
+    #personal-info {
+        text-align: left;
+        position: relative;
+    }
+
+    #personal-info .logout-btn {
+        margin-top: 15px;
+        text-align: center;
+    }
+    #address-preference {
+        text-align: left;
+        margin-top: 20px;
+    }
+
+    .address-container {
+        display: flex;
+        justify-content: left;
+        align-items: left;
+        gap: 10px; 
+        margin-top: 10px;
+    }
+
+    #address-input {
+        width: 60%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    .save-address-btn {
+        background-color: #D91656;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s;
+    }
+
+    .save-address-btn:hover{
+        background-color: #c0134d; 
+        transform: scale(1.05);
+    }
+
+    .save-address-btn:active 
+    {
+        background-color: #a1103f; 
+        transform: scale(1);
+    }
+
+    @media screen and (max-width: 768px)
+     {
+        #address-input {
+            width: 70%;
+        }
+
+        .save-address-btn {
+            width: auto;
+            font-size: 14px;
+            padding: 10px 15px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>Welcome to Your Dashboard, {{ client.first_name }}!</h1>
+    
+</header>
+
+<div class="container">
+   
+    <section id="personal-info">
+        <h2>Your Personal Information</h2>
+        <br></br>
+        <p><strong>Name:</strong> {{ client.first_name }} {{ client.second_name }}</p>
+        <br></br>
+        <p><strong>Email:</strong> {{ client.email }}</p>
+        <br></br>
+        <p><strong>Phone:</strong> {{ client.phone_number }}</p>
+        <br></br>
+        <p><strong>Address:</strong> <span id="address-display">{{ client.address }}</span></p>
+    </section>
+    <br></br>
+     
+     <section id="order-history">
+        <h2>Your Order History</h2>
+        <ul>
+            {% for order in order_history %}
+            <li>
+                <div>
+                    <strong>Order #{{ order.order_id }}</strong><br>
+                    Date: {{ order.order_date }} - Status: {{ order.status }}
+                </div>
+                <div>
+                    {% for product in order.products %}
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                        <img src="{{ url_for('static', filename=product.image_url)}}" alt="{{ product.name }}" style="width: 50px; height: 50px; margin-right: 10px;">
+                        <span>{{ product.name }} (x{{ product.quantity }}) - ${{ product.price }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </li>
+            {% else %}
+            <li>No orders found.</li>
+            {% endfor %}
+        </ul>
+    </section>        
+    <br></br>
+  
+    <section id="wishlist">
+        <h2>Your Wishlist</h2>
+        <a href="/wishlist">Go to Wishlist ⭐</a>
+    </section>
+    <br></br>
+    
+    <section id="address-preference">
+        <h2>Update Address</h2>
+        <div class="address-container">
+            <input type="text" id="address-input" placeholder="Enter your preferred address" value="{{ client.address }}">
+            <button id="save-address" class="save-address-btn">Save Address</button>
+        </div>
+    </section>
+</div>
+
+<div class="center-container">
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const addressInput = document.getElementById("address-input");
+        const saveAddressBtn = document.getElementById("save-address");
+        const addressDisplay = document.getElementById("address-display");
+
+        saveAddressBtn.addEventListener("click", () => {
+            const address = addressInput.value.trim();
+            if (address) {
+                fetch('/update_address', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ address }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            addressDisplay.textContent = address;
+                            alert("Address updated successfully!");
+                        } else {
+                            alert("Failed to update address: " + data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                        alert("An error occurred while updating the address.");
+                    });
+            } else {
+                alert("Please enter a valid address.");
+            }
+        });
+    });
+</script>
+{% endblock %}

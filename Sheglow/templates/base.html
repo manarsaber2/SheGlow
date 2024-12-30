@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SHEGLOW{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&family=Orbitron:wght@400..900&display=swap"
+        rel="stylesheet">
+    {% block head %}{% endblock %}
+</head>
+<body>
+   
+    <div class="top-bar">
+        <div class="promo">
+          
+            <span class="promo-text">Enjoy 15% Off Your First Order Using Code <strong>FIRST15</strong> -
+                <a href="{{ url_for('home') }}product" class="shop-now">Shop Now</a>
+            </span>
+            <span class="promo-text">Free Shipping on Orders Over $50 -
+                <a href="{{ url_for('home') }}product" class="shop-now">Shop Now</a>
+            </span>
+            <span class="promo-text">Exclusive Deals for Members -
+                <a href="{{ url_for('home') }}product" class="shop-now">Shop Now</a>
+            </span>
+           
+            <span class="promo-text">Enjoy 15% Off Your First Order Using Code <strong>FIRST15</strong> -
+                <a href="{{ url_for('home') }}product" class="shop-now">Shop Now</a>
+            </span>
+            <span class="promo-text">Free Shipping on Orders Over $50 -
+                <a href="{{ url_for('home') }}product" class="shop-now">Shop Now</a>
+            </span>
+            <span class="promo-text">Exclusive Deals for Members -
+                <a href="{{ url_for('home') }}product" class="shop-now">Shop Now</a>
+            </span>
+        </div>
+    </div>
+
+
+
+ 
+    <div class="middle-bar">
+        <div class="middle-center">
+            <div class="logo">SHE<span>GLOW</span></div>
+        </div>
+        <div class="middle-right">
+            <a href="#" id="search-icon" class="icon">
+                <i class="fas fa-search"></i>
+            </a>
+            <a href="/dashboard" class="icon">
+                <i class="fas fa-user-circle"></i>
+            </a>
+            <a href="/wishlist" class="icon" id="wishlist-icon">
+                <i class="fas fa-heart"></i>
+                <span class="badge" id="wishlist-count"></span> 
+            </a>
+            <a href="/add_to_cart_page" class="icon" id="cart-icon">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="badge" id="cart-count"></span> 
+            </a>
+        </div>
+    </div>
+
+   
+    <div class="search-bar-container" id="search-bar">
+        <span class="close-search" id="close-search">&times;</span>
+        <h3>Search Our Site</h3>
+        <form action="{{ url_for('search') }}" method="get">
+            <input type="text" name="q" placeholder="Search by name or keyword" id="search-input">
+            <button type="submit">Search</button>
+        </form>
+        <div id="suggestions-container"></div> 
+    </div>
+
+
+
+   
+    <header>
+        <nav class="bottom-nav">
+            <ul class="navbar">
+                <li>
+                    <a href="/">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/product">
+                        <i class="fas fa-box-open"></i> Products
+                    </a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0)" class="dropbtn" onclick="toggleDropdown()">
+                        <i class="fas fa-info-circle"></i> Info
+                    </a>
+                    <ul class="dropdown-content">
+                        <li><a href="/privacy-policy">Privacy Policy</a></li>
+                        <li><a href="/refund-policy">Refund Policy</a></li>
+                        <li><a href="/shipping-policy">Shipping Policy</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="/about">
+                        <i class="fas fa-users"></i> About Us
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </header>
+
+    {% block content %}{% endblock %}
+
+
+   <footer class="footer">
+    <div class="footer-container">
+       
+        <div class="footer-about">
+            <div class="logo">SHE<span>GLOW</span></div>
+            <p>Your trusted beauty destination for makeup, skincare, and more.</p>
+        </div>
+
+       
+        <div class="footer-links">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/product">Products</a></li>
+                <li><a href="/about">About Us</a></li>
+            </ul>
+        </div>
+
+        
+        <div class="footer-service">
+            <h4>Customer Service</h4>
+            <ul>
+                <li><a href="/privacy-policy">Privacy Policy</a></li>
+                <li><a href="/refund-policy">Refund Policy</a></li>
+                <li><a href="/shipping-policy">Shipping Policy</a></li>
+                <li><a href="/order-tracking">Order Tracking</a></li>
+            </ul>
+        </div>
+
+      
+        <div class="footer-contact">
+            <h4>Contact Us</h4>
+            <p><i class="fas fa-phone-alt"></i> +1 5589 55488 55</p>
+            <p><i class="fas fa-envelope"></i> support@sheglow.com</p>
+            <p><i class="fas fa-map-marker-alt"></i> 157 William St, New York, NY 10038</p>
+        </div>
+
+      
+        <div class="footer-social">
+            <h4>Follow Us</h4>
+            <div class="social-icons">
+                <a href="/"><i class="fab fa-facebook-f"></i></a>
+                <a href="/"><i class="fab fa-twitter"></i></a>
+                <a href="/"><i class="fab fa-instagram"></i></a>
+                <a href="/"><i class="fab fa-youtube"></i></a>
+            </div>
+        </div>
+    </div>
+
+ 
+    <div class="footer-bottom">
+        <p>Â© 2024 <span class="copy">SHE</span><span class="copyright">GLOW</span>. All rights reserved.</p>
+    </div>
+   </footer>
+
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

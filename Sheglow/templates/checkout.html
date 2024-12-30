@@ -1,0 +1,447 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout{% endblock %}
+{% block head %}
+    <style>
+        body {
+    font-family: 'Verdana', sans-serif; 
+    background: url("{{ url_for('static', filename='images/b6.webp') }}") no-repeat center center fixed;
+    background-size: cover;
+    background-attachment: fixed;
+    color: #323131;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+    direction: ltr;
+}
+
+h1,
+h2,
+h3 {
+    text-align: center;
+    color: #c6295e;
+    margin: 10px 0;
+    font-family: 'Verdana', sans-serif; 
+}
+
+.cart-summary,
+form {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 2px solid #f48fb1;
+    border-radius: 15px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+   
+    background-image: linear-gradient(135deg, white, pink); 
+    opacity: 0.95;
+}
+
+table {
+    width: 100%; 
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    border: 2px solid #f48fb1;
+    background-color: white; 
+}
+
+th,
+td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #f48fb1; 
+    font-family: 'Verdana', sans-serif; 
+}
+
+th {
+    background-color: pink; 
+    color: #fff; 
+    font-weight: bold;
+    border-bottom: 3px solid #e91e63; 
+    font-size: 1.2em; 
+}
+
+td {
+    background-color: white; 
+    font-size: 1.1em; 
+    transition: background-color 0.3s ease, transform 0.2s ease; 
+}
+
+td:hover {
+    background-color: pink; 
+    transform: scale(1.02); 
+}
+
+td img {
+    max-width: 60px; 
+    height: auto;
+    border-radius: 5px; 
+    border: 2px solid pink; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
+}
+
+
+label {
+    display: block;
+    margin-bottom: 10px;
+    color: #e91e63;
+    font-weight: bold;
+}
+
+input,
+textarea {
+    width: 98%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #f8bbd0;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: #f06292;
+    box-shadow: 0 0 5px rgba(240, 98, 146, 0.5);
+}
+
+.checkout-actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    padding: 13px 25px;
+    background-color: #e91e63;
+    color: #fff;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background-color: #f06292;
+    transform: scale(1.05);
+}
+
+.btn-secondary {
+    display: inline-block;
+    padding: 8px 18px;
+    color: #fff;
+    background-color: #9e9e9e;
+    border-radius: 15px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #616161;
+    transform: scale(1.05);
+}
+
+.snowflake {
+    position: fixed;
+    top: -50px;
+    color: #fff;
+    font-size: 1em;
+    user-select: none;
+    z-index: 9999;
+    pointer-events: none;
+    animation: snowflakes-fall 10s linear infinite, snowflakes-shake 3s ease-in-out infinite;
+}
+
+@keyframes snowflakes-fall {
+    0% {
+        top: -10%;
+    }
+
+    100% {
+        top: 100%;
+    }
+}
+
+@keyframes snowflakes-shake {
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    50% {
+        transform: translateX(80px);
+    }
+}
+
+@media (max-width: 992px) {
+        .cart-summary, form {
+            padding: 20px;
+            max-width: 90%;
+        }
+
+        table {
+            font-size: 0.9em;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+
+        input, textarea {
+            font-size: 12px;
+            padding: 10px;
+        }
+
+        button, .btn-secondary {
+            font-size: 14px;
+            padding: 10px 20px;
+        }
+    }
+
+   
+    @media (max-width: 768px) {
+        body {
+            padding: 10px;
+        }
+
+        .cart-summary, form {
+            padding: 15px;
+            max-width: 95%;
+            border-radius: 10px;
+        }
+
+        table {
+            font-size: 0.85em;
+        }
+
+        th, td {
+            padding: 8px;
+        }
+
+        td img {
+            max-width: 50px;
+            border-radius: 5px;
+        }
+
+        input, textarea {
+            width: 95%;
+            padding: 10px;
+            font-size: 12px;
+        }
+
+        button, .btn-secondary {
+            font-size: 13px;
+            padding: 8px 15px;
+        }
+    }
+
+   
+    @media (max-width: 480px) {
+        h1, h2 {
+            font-size: 1.5em;
+        }
+
+        .cart-summary, form {
+            padding: 10px;
+            max-width: 100%;
+        }
+
+        table {
+            font-size: 0.75em;
+        }
+
+        th, td {
+            padding: 5px;
+        }
+
+        td img {
+            max-width: 40px;
+        }
+
+        input, textarea {
+            font-size: 10px;
+            padding: 8px;
+        }
+
+        button, .btn-secondary {
+            font-size: 12px;
+            padding: 6px 12px;
+        }
+    }
+   
+@media (max-width: 768px) {
+    table {
+        font-size: 0.75em; 
+    }
+
+    th, td {
+        padding: 5px; 
+    }
+
+    td img {
+        max-width: 40px; 
+        height: auto;
+        border-radius: 3px; 
+    }
+}
+
+@media (max-width: 480px) {
+    table {
+        font-size: 0.65em; 
+        border: none; 
+    }
+
+    th, td {
+        padding: 3px; 
+    }
+
+    td img {
+        max-width: 30px; 
+        border-radius: 2px; 
+    }
+}
+
+
+@media (max-width: 480px) {
+    td:nth-child(2), th:nth-child(2) { 
+        display: none; 
+    }
+}
+
+
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}
+
+{% block content %}
+    <h1>Cart Summary</h1>
+    <div class="cart-summary">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>
+                        <img src="{{ url_for('static', filename=item.PhotoPath) }}" alt="{{ item.ProductName }}" width="50">
+                        {{ item.ProductName }}
+                    </td>
+                    <td>${{ item.Price }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.subtotal }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <hr>
+        <h2>Total: ${{ total }}</h2>
+        <h3>Shipping: ${{ shipping_cost }}</h3>
+        <h2>Total (with Shipping): ${{ total_with_shipping }}</h2>
+    </div>
+    
+    <form action="{{ url_for('complete_order') }}" method="POST" onsubmit="return validateForm()">
+        <h2>Customer Information</h2>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+        <label for="phone">Phone Number:</label>
+        <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" placeholder="Enter your address" rows="4" required></textarea>
+
+        <div class="checkout-actions">
+            <button type="submit">Place Order</button>
+            <a href="/add_to_cart_page" class="btn btn-secondary">Back to Cart</a>
+        </div>
+    </form>
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <script>
+                Swal.fire({
+                    icon: "{{ 'success' if category == 'success' else 'error' }}",
+                    title: "{{ message }}",
+                    showConfirmButton: true,
+                    timer: 5000
+                });
+            </script>
+        {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% endblock %}
+
+    {% block scripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const snowflakeSymbols = ['❄', '❅', '❆'];
+            const snowflakeCount = 50;
+
+            for (let i = 0; i < snowflakeCount; i++) {
+                const snowflake = document.createElement("div");
+                snowflake.className = "snowflake";
+                snowflake.innerHTML = snowflakeSymbols[Math.floor(Math.random() * snowflakeSymbols.length)];
+                snowflake.style.left = Math.random() * 100 + "vw";
+                snowflake.style.animationDelay = Math.random() * 5 + "s";
+                snowflake.style.fontSize = Math.random() * 10 + 10 + "px";
+                document.body.appendChild(snowflake);
+            }
+        });
+        function validateForm() {
+    var name = document.getElementById('name').value.trim();
+    var phone = document.getElementById('phone').value.trim();
+    var address = document.getElementById('address').value.trim();
+
+    
+    if (name === "") {
+        alert("Please enter your name.");
+        return false;
+    }
+
+    if (name.length < 3) {
+        alert("Name must be at least 3 characters long.");
+        return false;
+    }
+
+    if (!/^[a-zA-Z\s]+$/.test(name)) {
+        alert("Name can only contain letters and spaces.");
+        return false;
+    }
+
+    if (name.includes("@") || name.includes(".com") || name.includes(".net")) {
+        alert("Name cannot be an email address.");
+        return false;
+    }
+
+   
+    if (phone === "" || phone.length !== 11 || isNaN(phone)) {
+        alert("Please enter a valid 11-digit phone number.");
+        return false;
+    }
+
+
+    if (address === "") {
+        alert("Please enter your address.");
+        return false;
+    }
+
+    if (address.length < 7) {
+        alert("Address must be at least 7 characters long.");
+        return false;
+    }
+
+    return true;
+}
+
+    </script>
+{% endblock %}

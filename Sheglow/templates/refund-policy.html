@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='images/icon.png') }}"/>
+    <title>Refund Policy - SheGlow</title>
+    <style>
+        body {
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;  
+            align-items: flex-start;
+            min-height: 100vh;
+            background: url('static/images/b6.webp') no-repeat center center;
+            background-size: cover;
+        }
+
+        main {
+            margin: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            box-sizing: border-box;
+        }
+
+        h1, h2 {
+            font-family: cursive;
+            color: #333333;
+            font-weight: 200;
+        }
+
+        h1 + p, h2 + p {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 16px;
+            color: #555;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+
+        ul li {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            color: #555;
+        }
+
+        a {
+            color: #D91656;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        address a {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            color: #000000;
+            text-decoration: underline; 
+        }
+
+
+        .she {
+            color: #000;
+            font-family: "Orbitron", sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .glow {
+            color: #D91656;
+            font-family: "Orbitron", sans-serif;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .contact-info {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            font-size: 18px;
+            color: #D91656;
+            text-decoration: none;
+        }
+
+        .refund-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 30px;
+    max-width: 500px;
+    width: 100%;
+}
+
+.refund-form label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    text-align: left;
+    width: 100%;
+}
+
+.refund-form input[type="email"], 
+.refund-form button {
+    padding: 14px;
+    font-size: 18px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    width: 130%; 
+    box-sizing: border-box;
+}
+
+.refund-form input[type="email"]:focus {
+    border-color: #D91656;
+}
+
+.refund-form button {
+    background-color: #D91656;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.refund-form button:hover {
+    background-color: #a91446;
+    transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+    .refund-form {
+        padding: 15px;
+        max-width: 90%;
+    }
+
+    .refund-form input[type="email"], 
+    .refund-form button {
+        font-size: 16px;
+        width: 100%; 
+    }
+}
+
+
+    </style>
+</head>
+<body>
+    <main>
+        <section class="refund-policy">
+            <h1>Refund Policy</h1>
+            
+            <p>At <span class="she">SHE</span><span class="glow">GLOW</span>, customer satisfaction is our top priority. This Refund Policy outlines the conditions under which refunds may be issued for products purchased through our website.</p>
+
+            <h2>Eligibility for Refunds</h2>
+            <p>Refunds are available under the following conditions:</p>
+            <ul>
+                <li>The product must be returned in its original packaging, unused, and in the same condition as when it was received.</li>
+                <li>Refund requests must be made within 30 days of the purchase date.</li>
+                <li>Proof of purchase, such as a receipt or order confirmation, must be provided.</li>
+            </ul>
+
+            <h2>Non-Refundable Items</h2>
+            <p>Certain items are not eligible for refunds, including:</p>
+            <ul>
+                <li>Gift cards or promotional items.</li>
+                <li>Items marked as "final sale" or "non-returnable" at the time of purchase.</li>
+                <li>Products that have been opened, used, or tampered with.</li>
+            </ul>
+
+            <h2>How to Request a Refund</h2>
+            <p>If you meet the eligibility criteria and wish to request a refund, please follow these steps:</p>
+            <ul>
+                <li>Contact our customer support team at the email address provided below.</li>
+                <li>Include your order number, proof of purchase, and a brief explanation of the reason for the refund request.</li>
+                <li>Our team will review your request and provide instructions for returning the product, if applicable.</li>
+            </ul>
+            <h2>Request a Return or Exchange</h2>
+            <p>If you want to return or exchange a product, please enter your email address below and click "Submit". Our team will contact you shortly.</p>
+            
+            
+            <form action="/request_return_or_exchange" method="POST" class="refund-form">
+                <label for="email">Your Email:</label>
+                <input type="email" id="email" name="email" required placeholder="Enter your email address">
+                <button type="submit">Submit</button>
+            </form>
+            
+            
+            <h2>Contact Us</h2>
+            <p>If you have any questions or need assistance with a refund, please contact us at:</p>
+            <address>
+                <span class="contact-info">Email:</span> <a href="#top">support@SHEGLOW.com</a>.<br><br>
+                <span class="contact-info">Website:</span> <a href="#top">www.SHEGLOW.com</a>.
+            </address>
+        </section>
+    </main>
+</body>
+</html>
